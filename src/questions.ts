@@ -14,3 +14,7 @@ export const questions:Question[]=[
 export function normalizeAnswer(v:string){return v.trim().replace(/[０-９．－＋]/g,c=>String.fromCharCode(c.charCodeAt(0)-65248)).replace(/−/g,'-');}
 export function isCorrect(q:Question,v:string){const a=normalizeAnswer(q.answer),b=normalizeAnswer(v);if(q.type==='number'&&b!==''&&a!==''&&Number.isFinite(Number(b))&&Number.isFinite(Number(a)))return Number(a)===Number(b);return a===b;}
 export function chooseQuestions(unit:string){return questions.filter(q=>unit==='すべて'||q.unit===unit).slice(0,5);}
+
+/** Original, deterministically generated practice questions. */
+for(let i=0;i<30;i++){const x=(i%15)-7,offset=(i%9)+2,mult=(i%5)+2;const y=mult*x+offset;questions.push({id:'eq-auto-'+i,unit:'方程式',skill:i%2?'移項':'一次方程式',prompt:mult+'x + '+offset+' = '+y+' のとき x は？',type:'number',answer:String(x),hints:['両辺から '+offset+' を引こう','両辺を '+mult+' で割ろう'],solution:mult+'x = '+(y-offset)+' なので x = '+x,misconception:'符号・移項・除算'});}
+for(let i=0;i<30;i++){const a=(i%9)+1,x=[1,2,3,4,6][i%5];const inverse=i%2===1;const y=inverse?a*12/x:a*x;const answer=inverse?a*12:a;questions.push({id:'pr-auto-'+i,unit:'比例・反比例',skill:inverse?'反比例定数':'比例定数',prompt:inverse?'反比例 y = a/x で x = '+x+'、y = '+y+' のとき a は？':'比例 y = ax で x = '+x+'、y = '+y+' のとき a は？',type:'number',answer:String(answer),hints:[inverse?'a = x × y':'a = y ÷ x'],solution:inverse?'a = '+x+' × '+y+' = '+answer:'a = '+y+' ÷ '+x+' = '+answer,misconception:inverse?'反比例の定数':'比例の定数'});}
