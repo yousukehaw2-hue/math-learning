@@ -1,0 +1,30 @@
+name: Dependency security audit
+on:
+  pull_request:
+    paths:
+      - 'package.json'
+      - '.github/workflows/dependency-security.yml'
+  workflow_dispatch:
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit
+      - name: Audit dependency tree
+        run: |
+          npm audit --json > audit.json || true
+          node -e "const a=require('./audit.json');console.log(JSON.stringify({metadata:a.metadata?.vulnerabilities,advisories:Object.entries(a.vulnerabilities||{}).map(([name,v])=>({name,severity:v.severity,isDirect:v.isDirect,via:v.via,fixAvailable:v.fixAvailable}))},null,2))"
+      - name: Check non-breaking fixes
+        run: npm audit fix --dry-run --json > audit-fix-preview.json || true
+      - name: Upload audit details
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-audit
+          path: |
+            audit.json
+            audit-fix-preview.json
