@@ -1,0 +1,22 @@
+name: Kokugo prototype CI
+on:
+  pull_request:
+    paths:
+      - 'kokugo/**'
+      - '.github/workflows/kokugo-ci.yml'
+  push:
+    paths:
+      - 'kokugo/**'
+      - '.github/workflows/kokugo-ci.yml'
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax
+        run: node -e "const fs=require('fs');const vm=require('vm');const html=fs.readFileSync('kokugo/index.html','utf8');new vm.Script(html.match(/<script>([\s\S]*?)<\/script>/)[1]);"
+      - name: Run prototype checks
+        run: node --test kokugo/tests/smoke.check.cjs
