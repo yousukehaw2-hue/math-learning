@@ -19,3 +19,17 @@ assert.ok(sandbox.misconceptionFor(example,1).includes(example.choices[1]));
 assert.ok(sandbox.misconceptionFor(example,2).includes(example.choices[2]));
 assert.equal(sandbox.prerequisiteFor(example,1).id,auditedMeta[38][1].reviewId);
 assert.equal(sandbox.prerequisiteFor(example,2).id,auditedMeta[38][2].reviewId);
+
+// Startup regression: the question-bank validation must run after topicById initialization.
+const startupScript=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
+assert.ok(startupScript,'script missing');
+assert.ok(startupScript.indexOf('const topicById=')<startupScript.indexOf('validateBank();'),'topic map must initialize before validation');
+const startupElements=new Map();
+function startupElement(id){if(!startupElements.has(id))startupElements.set(id,{value:id==='batchSize'?'5':'all',textContent:'',classList:{add(){},remove(){},toggle(){}},getContext(){return {clearRect(){},beginPath(){},moveTo(){},lineTo(){},stroke(){}}},addEventListener(){},replaceChildren(){},append(){},prepend(){},disabled:false});return startupElements.get(id);}
+const startupDocument={getElementById:startupElement,querySelectorAll(){return []},createElement(){return startupElement('created'+startupElements.size)}};
+new Function('document','localStorage','alert',startupScript)(startupDocument,{getItem(){return null},setItem(){}},()=>{});
+assert.equal(typeof startupElement('start').onclick,'function');
+startupElement('start').onclick();
+assert.match(startupElement('progress').textContent,/1 \/ 5 問/);
+assert.ok(startupElement('question').textContent);
+console.log('PASS startup initialization and start button interaction');
