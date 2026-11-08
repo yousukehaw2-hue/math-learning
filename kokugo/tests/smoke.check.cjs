@@ -2,9 +2,9 @@ const fs=require('node:fs');const assert=require('node:assert/strict');const htm
 
 // Data-level and behavior checks for all 138 wrong-answer choices.
 const vm=require('node:vm');
-function parseChoiceQuestions(){const bank=html.slice(html.indexOf('const questions=[')+16,html.indexOf('];',html.indexOf('const questions=[')));return bank.split('\\n').filter(x=>x.startsWith('{')).map(line=>{if(line.startsWith('{\"'))return JSON.parse(line.replace(/,$/,''));const id=Number(line.match(/^\\{id:(\\d+)/)?.[1]);const cat=line.match(/cat:'([^']+)'/)?.[1];const choiceText=line.match(/choices:\[([^\]]+)\]/)?.[1];return {id,cat,type:line.includes("type:'choice'")?'choice':'writing',choices:choiceText?[...choiceText.matchAll(/'([^']*)'/g)].map(m=>m[1]):undefined,correct:0};});}
+function parseChoiceQuestions(){const bank=html.slice(html.indexOf('const questions=[')+16,html.indexOf('];',html.indexOf('const questions=[')));return bank.split('\n').filter(x=>x.startsWith('{')).map(line=>{if(line.startsWith('{\"'))return JSON.parse(line.replace(/,$/,''));const id=Number(line.match(/^\{id:(\d+)/)?.[1]);const cat=line.match(/cat:'([^']+)'/)?.[1];const choiceText=line.match(/choices:\[([^\]]+)\]/)?.[1];return {id,cat,type:line.includes("type:'choice'")?'choice':'writing',choices:choiceText?[...choiceText.matchAll(/'([^']*)'/g)].map(m=>m[1]):undefined,correct:0};});}
 const auditedBank=parseChoiceQuestions();
-const auditedMeta=JSON.parse(html.match(/const distractorAudit=(\\{[^;]+\\});/)[1]);
+const auditedMeta=JSON.parse(html.match(/const distractorAudit=(\{[^;]+\});/)[1]);
 const choiceBank=auditedBank.filter(q=>q.type==='choice');
 assert.equal(choiceBank.length,69);
 let auditedCount=0;
