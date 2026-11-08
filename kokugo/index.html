@@ -15,7 +15,25 @@ const questions=[
 {id:7,cat:'writing',level:3,type:'writing',passage:'図書室の利用者は増えたが、返却が遅れる本も増えた。',q:'利用者に向けた改善案を、理由も含めて80字以内で書きましょう。',limit:80,model:'返却日を知らせる掲示を増やすとよい。返却日を忘れる人が減り、次に借りたい人も利用しやすくなるからだ。',rubric:['具体的な改善策がある','改善する理由が書かれている','80字以内である']},
 {id:8,cat:'grammar',level:1,type:'choice',q:'「私は本を読む。」の主語は？',choices:['私は','本を','読む'],correct:0,why:'「だれが」に当たる「私は」が主語です。'},
 {id:9,cat:'kanji',level:2,type:'choice',q:'「適切」の意味として最も近いものは？',choices:['状況によく合っている','急いでいる','珍しい'],correct:0,why:'適切とは、その場にふさわしいことです。'},
-{id:10,cat:'writing',level:1,type:'writing',passage:'公園の花が咲き始めた。',q:'この文から分かる季節の変化を20字以内で説明しましょう。',limit:20,model:'花が咲く季節になったこと。',rubric:['花が咲き始めた変化に触れている','20字以内である']}
+{id:10,cat:'writing',level:1,type:'writing',passage:'公園の花が咲き始めた。',q:'この文から分かる季節の変化を20字以内で説明しましょう。',limit:20,model:'花が咲く季節になったこと。',rubric:['花が咲き始めた変化に触れている','20字以内である']},
+{"id":11,"cat":"kanji","level":1,"type":"choice","q":"「観察」の読みとして正しいものは？","choices":["かんさつ","かんせつ","かんそく"],"correct":0,"why":"観察は「かんさつ」と読み、様子を注意深く見ることです。"},
+{"id":12,"cat":"kanji","level":2,"type":"choice","q":"「工夫」の意味として適切なのは？","choices":["よりよい方法を考えること","急いで終えること","同じことを繰り返すこと"],"correct":0,"why":"工夫は目的に合わせて方法を考え改善することです。"},
+{"id":13,"cat":"kanji","level":3,"type":"choice","q":"「彼の説明は簡潔だ」の「簡潔」に近い意味は？","choices":["短く要点がまとまっている","詳しく長い","難しく理解できない"],"correct":0,"why":"簡潔は無駄がなく要点がまとまっていることです。"},
+{"id":14,"cat":"grammar","level":1,"type":"choice","q":"「鳥が空を飛ぶ」の述語は？","choices":["飛ぶ","鳥が","空を"],"correct":0,"why":"述語は主語について『どうする』を表す部分です。"},
+{"id":15,"cat":"grammar","level":2,"type":"choice","q":"「とても美しい花」の「とても」が修飾する語は？","choices":["美しい","花","とても"],"correct":0,"why":"「とても」は「美しい」の程度を詳しくしています。"},
+{"id":16,"cat":"grammar","level":3,"type":"choice","q":"「雨が降ったので、試合は延期された」の接続関係は？","choices":["原因・理由","逆接","並列"],"correct":0,"why":"「ので」は前の内容を理由として後の結果につなぎます。"},
+{"id":17,"cat":"reading","level":1,"type":"choice","passage":"窓の外でセミが鳴き、強い日差しが教室に差し込んでいた。","q":"文章から考えられる季節は？","choices":["夏","冬","春"],"correct":0,"why":"セミの鳴き声と強い日差しが夏を示す手がかりです。"},
+{"id":18,"cat":"reading","level":2,"type":"choice","passage":"結衣は借りた本を読み終えると、友達にも勧めた。友達が感想を話してくれるのを楽しみにしていた。","q":"結衣が本を勧めた理由として適切なのは？","choices":["感想を共有したかったから","本を捨てたかったから","宿題を減らしたかったから"],"correct":0,"why":"「感想を話してくれるのを楽しみに」が根拠です。"},
+{"id":19,"cat":"reading","level":3,"type":"choice","passage":"祖父の古い時計は時々遅れる。それでも父は修理して使い続ける。祖父が毎朝ねじを巻いていた姿を覚えているからだ。","q":"父が時計を使い続ける最も大きな理由は？","choices":["祖父との思い出を大切にしている","新しい時計が買えない","時計が正確だから"],"correct":0,"why":"不便さよりも祖父の思い出を大切にする気持ちが描かれています。"},
+{"id":20,"cat":"writing","level":1,"type":"writing","passage":"昼休み、図書室には静かに本を読む生徒がいた。","q":"図書室の様子を20字以内で説明しましょう。","limit":20,"model":"生徒が静かに読書している。","rubric":["生徒の行動を説明している","静かな様子に触れている","20字以内である"]},
+{"id":21,"cat":"writing","level":2,"type":"writing","passage":"遠足の日、朝から雨が降っていた。しかし、午後には空が明るくなり、予定どおり公園を歩くことができた。","q":"遠足の日の天気の変化を40字以内で説明しましょう。","limit":40,"model":"朝は雨だったが、午後には空が明るくなり公園を歩けた。","rubric":["朝の雨に触れている","午後の変化を説明している","40字以内である"]},
+{"id":22,"cat":"writing","level":3,"type":"writing","passage":"学校では紙の配布物が多い。端末で配布すると印刷を減らせる一方、端末を忘れる生徒もいる。","q":"紙と端末の両方の利点・課題を踏まえ、改善案を80字以内で書きましょう。","limit":80,"model":"基本は端末で配布して紙を減らし、端末を忘れた生徒には必要な資料だけ印刷して渡すとよい。","rubric":["印刷削減の利点に触れている","端末を忘れる課題に対応している","具体策を提案している","80字以内である"]},
+{"id":23,"cat":"kanji","level":1,"type":"choice","q":"「協力」の読みは？","choices":["きょうりょく","きょうりき","こうりょく"],"correct":0,"why":"協力（きょうりょく）は力を合わせることです。"},
+{"id":24,"cat":"kanji","level":2,"type":"choice","q":"「課題」の意味として最も適切なのは？","choices":["取り組むべき問題","すでに終わった仕事","偶然起こった出来事"],"correct":0,"why":"課題は解決や達成に向けて取り組むべき事柄です。"},
+{"id":25,"cat":"grammar","level":1,"type":"choice","q":"「大きな犬が走る」の主語は？","choices":["大きな犬が","走る","大きな"],"correct":0,"why":"「何が走るか」を表す「大きな犬が」が主語です。"},
+{"id":26,"cat":"grammar","level":2,"type":"choice","q":"「私は読んだ。しかし、内容を忘れた」の「しかし」の働きは？","choices":["逆の内容をつなぐ","理由を示す","例を挙げる"],"correct":0,"why":"「しかし」は前の内容に対して逆接の関係を示します。"},
+{"id":27,"cat":"reading","level":2,"type":"choice","passage":"翔太は最初、発表を断ろうとした。友達に練習を手伝ってもらい、当日は自分から手を挙げた。","q":"翔太の変化として適切なのは？","choices":["不安を乗り越え積極的になった","友達とけんかした","発表が嫌いになった"],"correct":0,"why":"断ろうとした状態から、自分から手を挙げる状態に変わっています。"},
+{"id":28,"cat":"writing","level":3,"type":"writing","passage":"地域の清掃活動では参加者が減っている。一方、短時間なら参加できるという声が多い。","q":"参加者を増やすための提案を理由とともに80字以内で書きましょう。","limit":80,"model":"清掃活動を30分程度の短い回に分けて実施する。短時間なら参加できる人が多く、参加の負担を減らせるからだ。","rubric":["短時間で参加できる工夫がある","根拠を示している","実行可能な提案である","80字以内である"]}
 ];
 const $=id=>document.getElementById(id);let batch=[],index=0,selected=null,checked=false,correctCount=0,inkUsed=false; const KEY='kokugo-progress-v2'; function load(){try{return JSON.parse(localStorage.getItem(KEY))||{attempts:0,correct:0,writings:[],mistakes:[]}}catch{return {attempts:0,correct:0,writings:[],mistakes:[]}}}function save(x){try{localStorage.setItem(KEY,JSON.stringify(x))}catch{alert('保存容量またはブラウザ設定により履歴を保存できませんでした')}}
 function stats(){const s=load();$('stats').textContent='これまでの選択式正答 '+s.correct+' / '+s.attempts+' 問';}
