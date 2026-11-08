@@ -19,4 +19,4 @@ jobs:
       - name: Check JavaScript syntax
         run: node -e "const fs=require('fs');const vm=require('vm');const html=fs.readFileSync('kokugo/index.html','utf8');new vm.Script(html.match(/<script>([\s\S]*?)<\/script>/)[1]);"
       - name: Run prototype checks
-        run: node --test kokugo/tests/smoke.test.cjs
+        run: node --test kokugo/tests/smoke.check.cjs
