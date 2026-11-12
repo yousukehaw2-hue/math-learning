@@ -1,4 +1,4 @@
-name: Kokugo prototype CI
+name: Kokugo CI
 on:
   pull_request:
     paths:
@@ -9,6 +9,33 @@ on:
       - 'kokugo/**'
       - '.github/workflows/kokugo-ci.yml'
 jobs:
+  content-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check questions, answers, explanations and duplicates
+        run: node --test kokugo/tests/content-quality.check.cjs
+  progress-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check learning history compatibility and review data
+        run: node --test kokugo/tests/progress-review.check.cjs
+  mobile-usability:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check mobile viewport, tap targets and status feedback
+        run: node --test kokugo/tests/mobile-usability.check.cjs
   smoke:
     runs-on: ubuntu-latest
     steps:
@@ -18,5 +45,5 @@ jobs:
           node-version: '22'
       - name: Check JavaScript syntax
         run: node -e "const fs=require('fs');const vm=require('vm');const html=fs.readFileSync('kokugo/index.html','utf8');new vm.Script(html.match(/<script>([\s\S]*?)<\/script>/)[1]);"
-      - name: Run prototype checks
+      - name: Run interaction and repetition regression checks
         run: node --test kokugo/tests/smoke.check.cjs
