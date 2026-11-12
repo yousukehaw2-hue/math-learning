@@ -33,3 +33,20 @@ startupElement('start').onclick();
 assert.match(startupElement('progress').textContent,/1 \/ 5 問/);
 assert.ok(startupElement('question').textContent);
 console.log('PASS startup initialization and start button interaction');
+
+// Regression: never repeat a question while unseen questions are available.
+const varietySource=html.slice(html.indexOf('function kokugoPattern(q)'),html.indexOf('function start(){'));
+assert.ok(varietySource.startsWith('function kokugoPattern(q)'));
+const chooseVariety=new Function('topicOf',varietySource+';return selectVariedKokugo;')(q=>q.topic);
+const sample=Array.from({length:12},(_,i)=>({id:i+1,cat:'reading',topic:i%3===0?'evidence':'feeling',q:'設問 '+i+' の根拠は？'}));
+let records=[];
+for(let round=0;round<3;round++){
+ const selected=chooseVariety(sample,records,new Set(),{},4);
+ assert.equal(selected.length,4);
+ assert.equal(new Set(selected.map(q=>q.id)).size,4);
+ assert.ok(selected.every(q=>!records.some(h=>h.id===q.id)),'unseen questions must come first');
+ records.push(...selected.map(q=>({id:q.id,cat:q.cat,ok:true,date:new Date().toISOString()})));
+}
+const repeat=chooseVariety(sample,records,new Set(),{},4);
+assert.equal(repeat.length,4,'review remains available after pool exhaustion');
+console.log('PASS kokugo cross-session repetition prevention');
