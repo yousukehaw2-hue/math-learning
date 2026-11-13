@@ -1,4 +1,5 @@
 import {questions,type Question,isCorrect,answerParts,normalizeAnswer} from './questions';
+import {similarQuestionCandidates} from './similarityAudit';
 
 export type AuditIssue={id:string;severity:'error'|'warning';message:string};
 export function questionSignature(q:Question){return JSON.stringify({prompt:q.prompt.replace(/\s+/g,'').normalize('NFKC'),answer:q.answer,choices:q.choices||[],diagram:q.diagram||null});}
@@ -22,5 +23,6 @@ export function auditQuestions(pool:Question[]=questions):AuditIssue[]{
   if(q.id.startsWith('eq-auto-')){const m=q.prompt.match(/^(\d+)x \+ (\d+) = (-?\d+)/);if(!m||Math.abs((Number(m[3])-Number(m[2]))/Number(m[1])-Number(q.answer))>1e-8)add('error','方程式の正答が不一致');}
   if(q.id.startsWith('pr-auto-')){const m=q.prompt.match(/x = (\d+)、y = ([\d.]+)/);if(!m)add('error','比例問題の数値が解析できない');else{const x=Number(m[1]),y=Number(m[2]);const expected=q.skill==='反比例定数'?x*y:y/x;if(Math.abs(expected-Number(q.answer))>1e-8)add('error','比例・反比例の正答が不一致');}}
  }
+ for(const candidate of similarQuestionCandidates(pool))issues.push({id:candidate.id,severity:'warning',message:`類似問題候補: ${candidate.similarTo}（${Math.round(candidate.score*100)}%・${candidate.reason}）`});
  return issues;
 }
