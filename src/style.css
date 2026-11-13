@@ -8,3 +8,4 @@
 
 .answer-input{display:flex;align-items:stretch;gap:8px}.answer-input input{min-width:0;flex:1}.answer-input .minus-toggle{flex:0 0 58px;font-size:1.25rem;min-height:48px}
 .choice-input{margin-top:12px}.choice-guide{display:flex;align-items:center;justify-content:space-between;gap:12px}.choice-guide p{margin:4px 0}.choice-mark{display:inline-block;min-width:1.5em;font-weight:800}.choices button[aria-pressed="true"]{outline:3px solid #173f72;outline-offset:1px}.choices button:focus-visible,.clear-choices:focus-visible{outline:3px solid #d97706;outline-offset:3px}.clear-choices{margin-top:10px;min-height:48px}
+.learning-metrics{margin:20px 0;padding:16px;border:1px solid #cbd5e1;border-radius:14px;background:#f8fafc}.learning-metrics h3,.learning-metrics h4{margin-top:0}.learning-metrics h4{margin-top:18px}
