@@ -5,7 +5,7 @@ import type {Entry} from './review';
 export function questionPattern(q:Question){
  return q.patternId||q.unit+'|'+q.skill+'|'+q.prompt.normalize('NFKC').replace(/[−－]/g,'-').replace(/[-+]?\d+(?:\.\d+)?/g,'#').replace(/\s+/g,' ').trim();
 }
-export function questionFormat(q:Question){return q.type==='choice'?'choice':q.reasoningType==='図の読み取り'||q.visual?'diagram':q.reasoningType?'word-reasoning':'calculation';}
+export function questionFormat(q:Question){return q.type==='choice'?'choice':q.type==='multi-choice'?'multi-choice':q.reasoningType==='図の読み取り'||q.visual?'diagram':q.reasoningType?'word-reasoning':'calculation';}
 
 /** New records carry sessionId. Historical records remain compatible as five-answer sessions. */
 export function recentSessionPatterns(history:Entry[],patterns:Map<string,string>,sessionCount=3){
