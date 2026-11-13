@@ -19,12 +19,26 @@ export function recentSessionPatterns(history:Entry[],patterns:Map<string,string
  return new Set(sessions.slice(-sessionCount).flat());
 }
 
+/** Count in how many recent sessions each answer/reasoning format appeared. */
+export function recentSessionFormats(history:Entry[],formats:Map<string,string>,sessionCount=3){
+ const sessions:{key:string;formats:Set<string>}[]=[];
+ for(let i=0;i<history.length;i++){
+  const h=history[i],format=formats.get(h.id);if(!format)continue;
+  const key=h.sessionId||'legacy-'+Math.floor(i/5);let session=sessions[sessions.length-1];
+  if(!session||session.key!==key){session={key,formats:new Set()};sessions.push(session);}
+  session.formats.add(format);
+ }
+ const counts=new Map<string,number>();for(const session of sessions.slice(-sessionCount))for(const format of session.formats)counts.set(format,(counts.get(format)||0)+1);return counts;
+}
+
 export function variedSelection(pool:Question[],history:Entry[],count:number,preference:(q:Question)=>number=()=>0):Question[]{
  const latest=new Map<string,{at:number;correct:boolean}>(),frequency=new Map<string,number>();
  const candidates=[...new Map(pool.map(q=>[q.id,q])).values()];
  const patterns=new Map(candidates.map(q=>[q.id,questionPattern(q)]));
+ const formats=new Map(candidates.map(q=>[q.id,questionFormat(q)]));
  for(const h of history){const at=Date.parse(h.at);if(!Number.isFinite(at)||!patterns.has(h.id))continue;frequency.set(h.id,(frequency.get(h.id)||0)+1);const prev=latest.get(h.id);if(!prev||at>=prev.at)latest.set(h.id,{at,correct:h.correct});}
  const recentPatterns=recentSessionPatterns(history,patterns,3);
+ const recentFormats=recentSessionFormats(history,formats,3);
  const result:Question[]=[],used=new Set<string>(),selectedPatterns=new Set<string>(),selectedFormats=new Set<string>(),skillCounts=new Map<string,number>();
  const limit=Math.min(Math.max(0,Math.floor(count)),candidates.length);
  while(result.length<limit){let best:Question|undefined,bestScore=Infinity;
@@ -32,12 +46,14 @@ export function variedSelection(pool:Question[],history:Entry[],count:number,pre
    const unseenIdAvailable=candidates.some(candidate=>!used.has(candidate.id)&&!latest.has(candidate.id));
    const unusedPatternAvailable=candidates.some(candidate=>!used.has(candidate.id)&&!selectedPatterns.has(patterns.get(candidate.id)!));
    const format=questionFormat(q),unusedFormatAvailable=candidates.some(candidate=>!used.has(candidate.id)&&!selectedFormats.has(questionFormat(candidate)));
+   const fresherFormatAvailable=candidates.some(candidate=>!used.has(candidate.id)&&(recentFormats.get(questionFormat(candidate))||0)<(recentFormats.get(format)||0));
    const freshRecentPatternAvailable=candidates.some(candidate=>!used.has(candidate.id)&&!recentPatterns.has(patterns.get(candidate.id)!));
    const idPenalty=prev?(unseenIdAvailable?1000:45)+Math.min(30,(frequency.get(q.id)||0)*5):0;
    const inSessionPenalty=selectedPatterns.has(pattern)&&unusedPatternAvailable?500:0;
    const recentPatternPenalty=recentPatterns.has(pattern)&&freshRecentPatternAvailable?180:0;
    const formatPenalty=selectedFormats.has(format)&&unusedFormatAvailable?40:0;
-   const score=idPenalty+inSessionPenalty+recentPatternPenalty+formatPenalty+(skillCounts.get(q.skill)||0)*7+Math.max(-8,Math.min(8,preference(q)));
+   const recentFormatPenalty=fresherFormatAvailable?(recentFormats.get(format)||0)*55:0;
+   const score=idPenalty+inSessionPenalty+recentPatternPenalty+formatPenalty+recentFormatPenalty+(skillCounts.get(q.skill)||0)*7+Math.max(-8,Math.min(8,preference(q)));
    if(score<bestScore||(score===bestScore&&q.id.localeCompare(best?.id||'')<0)){best=q;bestScore=score;}
   }
   if(!best)break;result.push(best);used.add(best.id);selectedPatterns.add(patterns.get(best.id)!);selectedFormats.add(questionFormat(best));skillCounts.set(best.skill,(skillCounts.get(best.skill)||0)+1);
